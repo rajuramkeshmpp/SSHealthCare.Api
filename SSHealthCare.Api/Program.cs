@@ -13,6 +13,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICountry, CountryRepository>();
+builder.Services.AddScoped<IState, StateRepository>();
+
 
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
