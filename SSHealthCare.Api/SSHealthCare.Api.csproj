@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
+    <ProjectReference Include="..\SSHealthCare.Infrastructure\SSHealthCare.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
