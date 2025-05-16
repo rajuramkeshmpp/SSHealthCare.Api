@@ -14,6 +14,8 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<ICountry, CountryRepository>();
 builder.Services.AddScoped<IState, StateRepository>();
+builder.Services.AddScoped<IDistrict, DistrictRepository>();
+
 
 
 
