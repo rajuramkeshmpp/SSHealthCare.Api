@@ -1,5 +1,5 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using SSHealthCare.Api.DTO.Request;
 using SSHealthCare.Domain.Entities;
 using SSHealthCare.Domain.Interfaces;
 
@@ -10,21 +10,37 @@ namespace SSHealthCare.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUser _user;
+
         public UserController(IUser user)
         {
             _user = user;
         }
+
         [HttpPost("Register")]
-        public IActionResult Register(User user) 
+        public IActionResult Register(UserRegister userRegister)
         {
+            User user = new User()
+            { 
+                Id = userRegister.Id,
+                Name = userRegister.Name,
+                Email = userRegister.Email,
+                Password = userRegister.Password
+            };
             var result = _user.AddUser(user);
             return Ok("Register successfully.");
         }
 
-        [HttpGet("GetAllUser")]
-        public IActionResult GetAllUser()
+        [HttpPost("Login")]
+        public IActionResult Login(UserLogin userLogin)
         {
-            return Ok(_user.GetAllUser());
+            var user = _user.Login(userLogin.Email, userLogin.Password);
+
+            if (user != null)
+            {
+                return Ok(new { status = 200, user = user });
+            }
+
+            return NotFound(new { message = "Invalid email or password" });
         }
     }
 }

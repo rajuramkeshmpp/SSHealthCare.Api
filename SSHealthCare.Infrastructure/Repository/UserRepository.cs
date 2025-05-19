@@ -20,9 +20,9 @@ namespace SSHealthCare.Infrastructure.Repository
             return true;
         }
 
-        public List<User> GetAllUser()
+        public User Login(string email, string password)
         {
-            return _context.Users.ToList();
+            return _context.Users.FirstOrDefault(u => u.Email == email && u.Password == password);
         }
     }
 }
