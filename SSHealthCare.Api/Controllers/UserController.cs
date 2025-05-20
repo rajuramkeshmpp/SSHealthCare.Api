@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using SSHealthCare.Api.DTO.Request;
 using SSHealthCare.Domain.Entities;
 using SSHealthCare.Domain.Interfaces;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 
 namespace SSHealthCare.Api.Controllers
 {
@@ -9,11 +13,19 @@ namespace SSHealthCare.Api.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+       
         private readonly IUser _user;
+        private readonly IRole _role;
+        private readonly IUserRole _userRole;
 
-        public UserController(IUser user)
+        private readonly IConfiguration _configuration;
+
+        public UserController(IUser user, IConfiguration configuration, IRole role, IUserRole userRole)
         {
             _user = user;
+            _configuration = configuration;
+            _role = role;
+            _userRole = userRole;
         }
 
         [HttpPost("Register")]
@@ -35,12 +47,35 @@ namespace SSHealthCare.Api.Controllers
         {
             var user = _user.Login(userLogin.Email, userLogin.Password);
 
-            if (user != null)
-            {
-                return Ok(new { status = 200, user = user });
-            }
+            if (user == null)
+                return Ok(new { token = "", name = "", role = "", success = "400" });
 
-            return NotFound(new { message = "Invalid email or password" });
+            var userRole = _userRole.GetUserRoleById(user.Id);
+
+            if (userRole == null)
+                return Ok(new { token = "", name = "", role = "", success = "401" });
+            else
+            {
+                var role = _role.GetRoleById(userRole.RoleId);
+
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Role, role.Name),
+                };
+
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+                var token = new JwtSecurityToken(
+                    issuer: _configuration["Jwt:Issuer"],
+                    audience: _configuration["Jwt:Audience"],
+                    claims: claims,
+                    expires: DateTime.Now.AddHours(Convert.ToDouble(_configuration["Jwt:ExpiresInHours"])),
+                    signingCredentials: creds
+                );
+                var jwt = new JwtSecurityTokenHandler().WriteToken(token);
+                return Ok(new { token = jwt, user = user, role = role, success = "200" });
+            }
         }
     }
 }

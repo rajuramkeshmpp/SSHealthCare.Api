@@ -17,5 +17,10 @@ namespace SSHealthCare.Infrastructure.Repository
         {
             return _context.UserRoles.ToList();
         }
+
+        public UserRole GetUserRoleById(int Id)
+        {
+            return _context.UserRoles.Find(Id);
+        }
     }
 }
