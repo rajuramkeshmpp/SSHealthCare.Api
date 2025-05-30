@@ -21,6 +21,7 @@ builder.Services.AddScoped<IDistrict, DistrictRepository>();
 builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<IRole, RoleRepository>();
 builder.Services.AddScoped<IUserRole, UserRoleRepository>();
+builder.Services.AddScoped<ISidebar, SidebarRepository>();
 
 
 
