@@ -34,9 +34,11 @@ namespace SSHealthCare.Api.Controllers
             User user = new User()
             { 
                 Id = userRegister.Id,
-                Name = userRegister.Name,
                 Email = userRegister.Email,
-                Password = userRegister.Password
+                Password = userRegister.Password,
+                Firstname = userRegister.Firstname,
+                Lastname = userRegister.Lastname,
+                Mobile = userRegister.Mobile
             };
             var result = _user.AddUser(user);
             return Ok("Register successfully.");
@@ -57,6 +59,7 @@ namespace SSHealthCare.Api.Controllers
             else
             {
                 var role = _role.GetRoleById(userRole.RoleId);
+                var company = new Company() { Id = 1, Name = "Shiwansh Solutions", Image = "jobportal.png" };  //_company.GetCompanyById(role.CompanyId);
 
                 var claims = new List<Claim>
                 {
@@ -74,8 +77,21 @@ namespace SSHealthCare.Api.Controllers
                     signingCredentials: creds
                 );
                 var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-                return Ok(new { token = jwt, user = user, role = role, success = "200" });
+                return Ok(new { token = jwt, user = user, role = role, success = "200", company = company });
             }
         }
+
+        [HttpGet("GetAllUser")]
+        public IActionResult GetAllUser()
+        {
+            return Ok(_user.GetAllUser());
+        }
+
+        [HttpGet("GetAllUserForTaskManager")]
+        public IActionResult GetAllUserForTaskManager()
+        {
+            return Ok(_user.GetAllUserForTaskManager());
+        }
+
     }
 }

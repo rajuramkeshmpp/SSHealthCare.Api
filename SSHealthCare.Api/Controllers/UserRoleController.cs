@@ -19,5 +19,10 @@ namespace SSHealthCare.Api.Controllers
         {
             return Ok(_userRole.GetAllUserRole());
         }
+        [HttpPost("AddUserRole")]
+        public IActionResult AddUserRole(UserRole userRole)
+        {
+            return Ok(_userRole.AddUserRole(userRole));
+        }
     }
 }

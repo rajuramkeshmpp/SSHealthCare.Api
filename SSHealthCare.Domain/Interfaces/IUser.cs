@@ -8,5 +8,7 @@ namespace SSHealthCare.Domain.Interfaces
     {
         bool AddUser(User user);
         User Login(string email, string password);
+        List<User> GetAllUser();
+        List<User> GetAllUserForTaskManager();
     }
 }

@@ -9,5 +9,7 @@ namespace SSHealthCare.Domain.Interfaces
         List<Sidebar> GetAll();
         Sidebar GetSidebarById(int Id);
         List<Sidebar> GetSidebbarByRoleId(int RoleId);
+        bool AddSidebar(Sidebar sidebar);
+
     }
 }

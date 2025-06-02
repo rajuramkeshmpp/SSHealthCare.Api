@@ -13,9 +13,18 @@ namespace SSHealthCare.Infrastructure.Repository
             _context = context;
         }
 
+        public bool AddSidebar(Sidebar sidebar)
+        {
+            _context.Add(sidebar);
+            _context.SaveChanges();
+            return true;
+        }
+
         public List<Sidebar> GetAll()
         {
-            return _context.Sidebars.ToList();
+            var roledata = _context.Sidebars.ToList();
+
+            return roledata;
         }
 
         public Sidebar GetSidebarById(int Id)

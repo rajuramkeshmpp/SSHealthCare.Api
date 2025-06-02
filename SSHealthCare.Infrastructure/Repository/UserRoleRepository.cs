@@ -13,6 +13,13 @@ namespace SSHealthCare.Infrastructure.Repository
             _context = context;
         }
 
+        public bool AddUserRole(UserRole userRole)
+        {
+            _context.UserRoles.Add(userRole);
+            _context.SaveChanges();
+            return true;
+        }
+
         public List<UserRole> GetAllUserRole()
         {
             return _context.UserRoles.ToList();
@@ -21,6 +28,13 @@ namespace SSHealthCare.Infrastructure.Repository
         public UserRole GetUserRoleById(int Id)
         {
             return _context.UserRoles.Find(Id);
+        }
+
+        public bool UpdateUserRole(UserRole userRole)
+        {
+            _context.UserRoles.Update(userRole);
+            _context.SaveChanges();
+            return true;
         }
     }
 }

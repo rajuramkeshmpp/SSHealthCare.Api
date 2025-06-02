@@ -29,5 +29,14 @@ namespace SSHealthCare.Api.Controllers
 
             return Ok(sidebars);
         }
+
+        [HttpPost("AddSidebar")]
+        public IActionResult AddSidebar(Sidebar sidebar)
+        {
+            if (sidebar == null)
+                return BadRequest("Invalid sidebar data.");
+            var result = _sidebar.AddSidebar(sidebar);
+            return Ok("Sidebar added successfully.");
+        }
     }
 }

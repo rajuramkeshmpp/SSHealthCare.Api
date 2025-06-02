@@ -8,5 +8,8 @@ namespace SSHealthCare.Domain.Interfaces
     {
         List<UserRole> GetAllUserRole();
         UserRole GetUserRoleById(int Id);
+        bool AddUserRole(UserRole userRole);
+       
+        bool UpdateUserRole(UserRole userRole);
     }
 }

@@ -21,8 +21,4 @@
     <ProjectReference Include="..\SSHealthCare.Infrastructure\SSHealthCare.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="DTO\Response\" />
-  </ItemGroup>
-
 </Project>
