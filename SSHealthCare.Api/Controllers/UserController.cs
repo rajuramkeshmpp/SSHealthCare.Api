@@ -59,7 +59,7 @@ namespace SSHealthCare.Api.Controllers
             else
             {
                 var role = _role.GetRoleById(userRole.RoleId);
-                var company = new Company() { Id = 1, Name = "Shiwansh Solutions", Image = "jobportal.png" };  //_company.GetCompanyById(role.CompanyId);
+                var company = new Company() { Id = 1, Name = "Shiwansh Solutions", Logo = "jobportal.png" };  //_company.GetCompanyById(role.CompanyId);
 
                 var claims = new List<Claim>
                 {

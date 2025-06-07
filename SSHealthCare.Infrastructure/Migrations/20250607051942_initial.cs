@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
@@ -13,17 +14,25 @@ namespace SSHealthCare.Infrastructure.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Company",
+                name: "Companies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Image = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    RegistrationNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    DateOfIncorporation = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    BusinessType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BusinessDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Website = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactNo = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Logo = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Company", x => x.Id);
+                    table.PrimaryKey("PK_Companies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -52,6 +61,21 @@ namespace SSHealthCare.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Districts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "HomePageSidebars",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Path = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TechnologyId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_HomePageSidebars", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -111,19 +135,16 @@ namespace SSHealthCare.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TaskManagers",
+                name: "Technologies",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TaskName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    TaskDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    StatusId = table.Column<int>(type: "int", nullable: false)
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TaskManagers", x => x.Id);
+                    table.PrimaryKey("PK_Technologies", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -157,27 +178,84 @@ namespace SSHealthCare.Infrastructure.Migrations
                     table.PrimaryKey("PK_Users", x => x.Id);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "TaskManagers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    TaskName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TaskDescription = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserId = table.Column<int>(type: "int", nullable: false),
+                    StatusId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TaskManagers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_TaskManagers_Statuses_StatusId",
+                        column: x => x.StatusId,
+                        principalTable: "Statuses",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_TaskManagers_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
-                table: "Company",
-                columns: new[] { "Id", "Image", "Name" },
+                table: "Companies",
+                columns: new[] { "Id", "Address", "BusinessDescription", "BusinessType", "ContactNo", "DateOfIncorporation", "Email", "Logo", "Name", "RegistrationNumber", "Website" },
                 values: new object[,]
                 {
-                    { 1, "jobportal.png", "SS Job Portal" },
-                    { 2, "healthcare.png", "SS Health Care" },
-                    { 3, "healthcare.png", "SS Health Care" },
-                    { 4, "healthcare.png", "SS Health Care" },
-                    { 5, "jobportal.png", "SS Job Portal" },
-                    { 6, "jobportal.png", "SS Job Portal" },
-                    { 7, "jobportal.png", "SS Job Portal" },
-                    { 8, "ehousing.png", "SS E-Housing" },
-                    { 9, "ehousing.png", "SS E-Housing" },
-                    { 10, "ehousing.png", "SS E-Housing" },
-                    { 11, "sszepto.png", "SS Zepto" },
-                    { 12, "sszepto.png", "SS Zepto" },
-                    { 13, "sszepto.png", "SS Zepto" },
-                    { 14, "ssschool.png", "SS School" },
-                    { 15, "ssschool.png", "SS School" },
-                    { 16, "ssschool.png", "SS School" }
+                    { 1, "Mohali,Chandigarh", "JOb", "JOb", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7410), "admin@shiwansh.com", "jobportal.png", "SS Job Portal", "111A", "http://www.dotnetinfotech.com/" },
+                    { 2, "Mohali,Chandigarh", "Hospital", "Hospital", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7430), "admin@shiwansh.com", "healthcare.png", "SS Health Care", "222B", "http://www.dotnetinfotech.com/" },
+                    { 3, "Mohali,Chandigarh", "Hospital", "Hospital", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7432), "admin@shiwansh.com", "healthcare.png", "SS Health Care", "333C", "http://www.dotnetinfotech.com/" },
+                    { 4, "Mohali,Chandigarh", "Hospital", "Hospital", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7435), "admin@shiwansh.com", "healthcare.png", "SS Health Care", "444D", "http://www.dotnetinfotech.com/" },
+                    { 5, "Mohali,Chandigarh", "Job", "Job", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7437), "admin@shiwansh.com", "jobportal.png", "SS Job Portal", "555E", "https://www.shiwansh.com/career.html" },
+                    { 6, "Mohali,Chandigarh", "Job", "Job", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7440), "admin@shiwansh.com", "jobportal.png", "SS Job Portal", "666F", "https://www.shiwansh.com/career.html" },
+                    { 7, "Mohali,Chandigarh", "Job", "Job", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7443), "admin@shiwansh.com", "jobportal.png", "SS Job Portal", "777G", "https://www.shiwansh.com/career.html" },
+                    { 8, "Mohali,Chandigarh", "Housing", "Housing", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7445), "admin@shiwansh.com", "ehousing.png", "SS E-Housing", "888H", "https://www.shiwansh.com/career.html" },
+                    { 9, "Mohali,Chandigarh", "Housing", "Housing", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7448), "admin@shiwansh.com", "ehousing.png", "SS E-Housing", "999I", "https://www.shiwansh.com/career.html" },
+                    { 10, "Mohali,Chandigarh", "Housing", "Housing", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7451), "admin@shiwansh.com", "ehousing.png", "SS E-Housing", "000J", "https://www.shiwansh.com/career.html" },
+                    { 11, "Mohali,Chandigarh", "Onlineshop", "Onlineshop", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7453), "admin@shiwansh.com", "sszepto.png", "SS Zepto", "K111", "http://www.dotnetinfotech.com/" },
+                    { 12, "Mohali,Chandigarh", "Onlineshop", "Onlineshop", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7456), "admin@shiwansh.com", "sszepto.png", "SS Zepto", "L222", "http://www.dotnetinfotech.com/" },
+                    { 13, "Mohali,Chandigarh", "Onlineshop", "Onlineshop", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7458), "admin@shiwansh.com", "sszepto.png", "SS Zepto", "M333", "http://www.dotnetinfotech.com/" },
+                    { 14, "Mohali,Chandigarh", "Education", "Education", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7461), "admin@shiwansh.com", "ssschool.png", "SS School", "N444", "https://www.shiwansh.com/career.html" },
+                    { 15, "Mohali,Chandigarh", "Education", "Education", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7463), "admin@shiwansh.com", "ssschool.png", "SS School", "O555", "https://www.shiwansh.com/career.html" },
+                    { 16, "Mohali,Chandigarh", "Education", "Education", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7466), "admin@shiwansh.com", "ssschool.png", "SS School", "P666", "https://www.shiwansh.com/career.html" },
+                    { 17, "Mohali,Chandigarh", "Education", "Education", "6280391882", new DateTime(2025, 6, 7, 10, 49, 41, 850, DateTimeKind.Local).AddTicks(7469), "homeadmin@shiwansh.com", "ssdocs.png", "SS Docs", "Q777", "https://www.shiwansh.com/career.html" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "HomePageSidebars",
+                columns: new[] { "Id", "Name", "Path", "TechnologyId" },
+                values: new object[,]
+                {
+                    { 1, ".Net Core Api Sql", "netcoreapi", 1 },
+                    { 2, ".Net Core Api PostgreSql", "netcoreapipostgre", 1 },
+                    { 3, ".Net Core Api Monodb", "netcoreapimongo", 1 },
+                    { 4, "Dot Net Q/A", "dotnetqa", 1 },
+                    { 5, "API with MongoDB", "nodeapimongo", 2 },
+                    { 6, "API with SQL Server", "nodeapisql", 2 },
+                    { 7, "API with Postgresql", "nodeapipostgre", 2 },
+                    { 8, "Node Js Q/A", "nodeqa", 2 },
+                    { 9, "CRUD-Static Array", "crudstaticarray", 3 },
+                    { 10, "CRUD-JSON Server", "crudjsonserver", 3 },
+                    { 11, "React CRUD with API", "reactcrudwithapi", 3 },
+                    { 12, "React Js Q/A ", "reactqa", 3 },
+                    { 13, "VS Code", "vscode", 9 },
+                    { 14, "Visual Studio", "visualstudio", 9 },
+                    { 15, "SQL Server", "sqlserverinstall", 9 },
+                    { 16, "PostgreSql Server", "postgresqlserverinstall", 9 },
+                    { 17, "MongoDB", "mongodbinstall", 9 },
+                    { 18, "Node JS", "nodejs", 9 },
+                    { 19, "SQL Server", "sqlserverdb", 5 },
+                    { 20, "PostgreSql Server", "postgresqlserverdb", 5 },
+                    { 21, "MongoDB Server", "mongodbserver", 5 }
                 });
 
             migrationBuilder.InsertData(
@@ -200,7 +278,8 @@ namespace SSHealthCare.Infrastructure.Migrations
                     { 13, 13, "Seller" },
                     { 14, 14, "SchoolAdmin" },
                     { 15, 15, "Teacher" },
-                    { 16, 16, "Student" }
+                    { 16, 16, "Student" },
+                    { 17, 17, "HomeAdmin" }
                 });
 
             migrationBuilder.InsertData(
@@ -231,7 +310,26 @@ namespace SSHealthCare.Infrastructure.Migrations
                     { 21, "Country", "country", 2 },
                     { 22, "State", "state", 2 },
                     { 23, "District", "district", 2 },
-                    { 24, "Sidebar", "sidebar", 1 }
+                    { 24, "Sidebar", "sidebar", 1 },
+                    { 25, "Technology", "technology", 17 },
+                    { 26, "Homesidebar", "homesidebar", 17 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Technologies",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Dotnet" },
+                    { 2, "NodeJs" },
+                    { 3, "ReactJs" },
+                    { 4, "NextJs" },
+                    { 5, "Database" },
+                    { 6, "DevOps" },
+                    { 7, "Python" },
+                    { 8, "Java" },
+                    { 9, "Installation" },
+                    { 10, "Migration" }
                 });
 
             migrationBuilder.InsertData(
@@ -254,7 +352,8 @@ namespace SSHealthCare.Infrastructure.Migrations
                     { 13, 13, 13 },
                     { 14, 14, 14 },
                     { 15, 15, 15 },
-                    { 16, 16, 16 }
+                    { 16, 16, 16 },
+                    { 17, 17, 17 }
                 });
 
             migrationBuilder.InsertData(
@@ -277,21 +376,35 @@ namespace SSHealthCare.Infrastructure.Migrations
                     { 13, "anilseller@gmail.com", "Anil", "Dhakad", "9876543310", "Test@123" },
                     { 14, "roshanadmin@gmail.com", "Roshan", "Kumar", "9876543410", "Test@123" },
                     { 15, "roshanteacher@gmail.com", "Roshan", "Kumar", "9876543510", "Test@123" },
-                    { 16, "roshanstudent@gmail.com", "Roshan", "Kumar", "9876543610", "Test@123" }
+                    { 16, "roshanstudent@gmail.com", "Roshan", "Kumar", "9876543610", "Test@123" },
+                    { 17, "homeadmin@gmail.com", "Home", "Admin", "9876543610", "Test@123" }
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskManagers_StatusId",
+                table: "TaskManagers",
+                column: "StatusId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_TaskManagers_UserId",
+                table: "TaskManagers",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Company");
+                name: "Companies");
 
             migrationBuilder.DropTable(
                 name: "Countries");
 
             migrationBuilder.DropTable(
                 name: "Districts");
+
+            migrationBuilder.DropTable(
+                name: "HomePageSidebars");
 
             migrationBuilder.DropTable(
                 name: "Roles");
@@ -303,13 +416,16 @@ namespace SSHealthCare.Infrastructure.Migrations
                 name: "States");
 
             migrationBuilder.DropTable(
-                name: "Statuses");
-
-            migrationBuilder.DropTable(
                 name: "TaskManagers");
 
             migrationBuilder.DropTable(
+                name: "Technologies");
+
+            migrationBuilder.DropTable(
                 name: "UserRoles");
+
+            migrationBuilder.DropTable(
+                name: "Statuses");
 
             migrationBuilder.DropTable(
                 name: "Users");

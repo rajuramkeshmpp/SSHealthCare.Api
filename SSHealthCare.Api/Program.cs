@@ -22,6 +22,11 @@ builder.Services.AddScoped<IUser, UserRepository>();
 builder.Services.AddScoped<IRole, RoleRepository>();
 builder.Services.AddScoped<IUserRole, UserRoleRepository>();
 builder.Services.AddScoped<ISidebar, SidebarRepository>();
+builder.Services.AddScoped<IStatus, StatusRepository>();
+builder.Services.AddScoped<ICompany, CompanyRepository>();
+builder.Services.AddScoped<ITechnology, TechnologyRepository>();
+builder.Services.AddScoped<IHomePageSidebar, HomePageSidebarRepository>();
+
 
 
 
